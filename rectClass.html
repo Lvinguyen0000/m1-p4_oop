@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rectangle</title>
+</head>
+<body>
+    <canvas id="canvas" width="1000px" height="500px" style="border: 1px solid black;"></canvas>
+
+    <script>
+        function rectangle(x, y, width, height){
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+
+            this.perimeter = function(){
+                return 2*(width+height);
+            }
+            this.area = function(){
+                return width*height;
+            }
+            
+            this.draw = function(context){
+                context.beginPath();
+                context.rect(this.x, this.y, this.width, this.height);
+                context.stroke();
+            }
+        }
+
+        let rect = new rectangle(20, 20, 400, 150);
+        let ctx = document.getElementById("canvas").getContext("2d");
+        rect.draw(ctx);
+        ctx.font  = "30px Arial";
+        ctx.fillText("Perimeter: " + rect.perimeter() + " ,Area: " + rect.area(), 20, 300);
+    </script>
+</body>
+</html>
