@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature</title>
+    <style>
+        input{
+            width: 5rem;
+        }
+    </style>
+</head>
+<body>
+    <input id="in" placeholder="Enter Celcius temperature"><br>
+    <input id="out1"><span>&deg;F</span><br>
+    <input id="out2"><span>&deg;K</span>
+    
+    <script>
+        function Cdegree(deg){
+            if(deg < -273) this.deg=-273;
+            else this.deg=deg
+
+            this.toF = function(){
+                return deg * 9/5 + 32;
+            }
+            this.toK = function(){
+                return deg + 273.15;
+            }
+        }
+
+        let C = null;
+        document.getElementById("in").oninput = function(){
+            C = new Cdegree(parseInt(this.value))
+            document.getElementById("out1").value = C.toF();
+            document.getElementById("out2").value = C.toK();
+            C = null;
+        }
+    </script>
+</body>
+</html>
