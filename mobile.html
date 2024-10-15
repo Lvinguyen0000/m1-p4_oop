@@ -214,9 +214,16 @@
             addClass(curEle, "on-screen");
         }
 
+        function removeChildBtwnFisrtLast(parentElement){
+            while(parentElement.childElementCount > 3){
+                parentElement.removeChild(parentElement.firstElementChild.nextElementSibling.nextElementSibling)
+            }
+        }
+
         function onScreen_Sent(mobile){
             mobile.changeScreen("sent");
             mobile.downBattery();
+            removeChildBtwnFisrtLast(mobile.sentScreen);
             let sent = mobile.getSent();
             for (let i of sent){
                 let doc = document.createElement("p");
@@ -233,6 +240,7 @@
         function onScreen_Recieved(mobile){
             mobile.changeScreen("recieved");
             mobile.downBattery();
+            removeChildBtwnFisrtLast(mobile.recievedScreen);
             let recieved = mobile.getRecived();
             for (let i of recieved){
                 let doc = document.createElement("p");
