@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobilephone</title>
+    <style>
+        .none{
+            display: none;
+        }
+
+        .phone-outer:not(.off-screen) .off-screen,
+        .phone-outer:not(.on-screen) .on-screen,
+        .phone-outer:not(.compose) .compose,
+        .phone-outer:not(.sent) .sent,
+        .phone-outer:not(.recieved) .recieved{
+            display: none
+        }
+
+        .phone-outer{
+            width: 15rem; height: 20rem; border: 5px solid black; border-radius: 15px;overflow: hidden; display: inline-block;
+        }
+        .phone-outer .battery{
+            position: relative; text-align: right; height: 5%;
+        }
+
+        .phone-outer .off-screen,
+        .phone-outer .on-screen,
+        .phone-outer .compose,
+        .phone-outer .sent,
+        .phone-outer .recieved
+        {
+            text-align: center; height: 95%; width: 100%; overflow-y:auto;
+        }
+        .phone-outer .off-screen button{
+            position: relative;top: 30%; margin-bottom: 2rem;
+        }
+        .phone-outer .on-screen button{
+            margin-top: 2rem;
+        }
+        .phone-outer .charge{
+            position: relative; margin-top: 5%;
+        }
+        .phone-outer .compose input,
+        .phone-outer .compose textarea{
+            width: 90%;
+        }
+        .phone-outer .compose textarea{
+            height: auto; resize: none; height: 60%;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-outer off-screen" id="nokia">
+        <div class="battery">BAT: 100%</div>
+        <div class="off-screen">
+            <button>ON</button><br>
+            <button>CHARGE</button>
+        </div>
+        <div class="on-screen">
+            <button>COMPOSE</button><br>
+            <button>SENT</button><br>
+            <button>RECIEVED</button><br>
+            <button>OFF</button>
+        </div>
+        <div class="compose">
+            <h3>Compose a new message</h3>
+            <hr>
+            <input placeholder="Send to">
+            <textarea></textarea>
+            <button>Send</button>
+            <button onclick="toOnScreen(this)">Back</button>
+        </div>
+        <div class="sent">
+            <h3>Sent message</h3>
+            <hr>
+            <button onclick="toOnScreen(this)">Back</button>
+        </div>
+        <div class="recieved">
+            <h3>Recieved message</h3>
+            <hr>
+            <button onclick="toOnScreen(this)">Back</button>
+        </div>
+    </div>
+
+    <div class="phone-outer off-screen" id="iphone">
+        <div class="battery">BAT: 100%</div>
+        <div class="off-screen">
+            <button>ON</button><br>
+            <button>CHARGE</button>
+        </div>
+        <div class="on-screen">
+            <button>COMPOSE</button><br>
+            <button>SENT</button><br>
+            <button>RECIEVED</button><br>
+            <button>OFF</button>
+        </div>
+        <div class="compose">
+            <h3>Compose a new message</h3>
+            <hr>
+            <input placeholder="Send to">
+            <textarea></textarea>
+            <button>Send</button>
+            <button onclick="toOnScreen(this)">Back</button>
+        </div>
+        <div class="sent">
+            <h3>Sent message</h3>
+            <hr>
+            <button onclick="toOnScreen(this)">Back</button>
+        </div>
+        <div class="recieved">
+            <h3>Recieved message</h3>
+            <hr>
+            <button onclick="toOnScreen(this)">Back</button>
+        </div>
+    </div>
+
+    <script>
+        class message{
+            constructor(from = "", to = "", msg = ""){
+                this.from = from;
+                this.to = to;
+                this.msg = msg;
+            }
+
+            getFrom(){return this.from};
+            getTo(){return this.to};
+            getMsg(){return this.msg};
+        }
+
+        class mobile{
+            constructor(id){
+                this.id = id;
+                this.mainEle = document.getElementById(id);
+
+                this.batteryBar = this.mainEle.firstElementChild;
+                this.offScreen = this.batteryBar.nextElementSibling;
+                this.onScreen = this.offScreen.nextElementSibling;
+                this.composeScreen = this.onScreen.nextElementSibling;
+                this.sentScreen = this.composeScreen.nextElementSibling;
+                this.recievedScreen = this.sentScreen.nextElementSibling;
+                this.chargeSect = this.recievedScreen.nextElementSibling;
+
+                this.chargeBtn = this.offScreen.lastElementChild;
+
+                this.battery = 100;
+                this.composing = new message();
+                this.sent = [];
+                this.recieved = [];
+
+                //test data
+                // let a = new message("nokia", "iphone", "whut");
+                // let b = new message("nokia", "iphone", "lorem");
+                // this.sent.push(a);
+                // this.sent.push(b);
+                // this.sent.push(a);
+                // this.sent.push(b);
+                // this.recieved.push(a);
+                // this.recieved.push(a);
+                // this.recieved.push(b)
+            }
+
+            getId(){return this.id};
+            getEle(){return this.mainEle};
+            getSent(){return this.sent};
+            getRecived(){return this.recieved};
+            getBattery(){return this.battery};
+
+            sendMsg(msg){
+                this.sent.push(msg);
+            }
+
+            recieveMsg(msg){
+                this.recieved.push(msg);
+            }
+
+            chargeBtn(){
+                this.onBattery();
+            }
+
+            changeScreen(screen){
+                this.mainEle.removeAttribute("class");
+                this.mainEle.classList.add("phone-outer");
+                this.mainEle.classList.add(screen);
+            }
+
+            downBattery(){
+                if(this.battery>0){
+                    this.battery--;
+                    this.batteryBar.textContent = "BAT: " + this.battery + "%";
+                }
+                if (this.battery == 0){
+                    this.changeScreen("off-screen");
+                    this.batteryBar.textContent = "BAT: " + this.battery + "%";
+                }
+            }
+
+            onBattery(){
+                if(this.battery<100){
+                    this.battery++;
+                    this.batteryBar.textContent = "BAT: " + this.battery + "%";
+                }
+            }
+
+        }
+
+        function addClass(curEle, classToAdd){
+            curEle.parentNode.parentNode.removeAttribute("class");
+            curEle.parentNode.parentNode.classList.add("phone-outer");
+            curEle.parentNode.parentNode.classList.add(classToAdd);
+        }
+
+        function toOnScreen(curEle){
+            addClass(curEle, "on-screen");
+        }
+
+        function onScreen_Sent(mobile){
+            mobile.changeScreen("sent");
+            mobile.downBattery();
+            let sent = mobile.getSent();
+            for (let i of sent){
+                let doc = document.createElement("p");
+                doc.textContent += "Sent to " + i.getTo() 
+                mobile.sentScreen.insertBefore(doc, mobile.sentScreen.lastElementChild);
+                doc = document.createElement("p");
+                doc.textContent +=  "Message: " + i.getMsg();
+                mobile.sentScreen.insertBefore(doc, mobile.sentScreen.lastElementChild);
+                doc = document.createElement("hr");
+                mobile.sentScreen.insertBefore(doc, mobile.sentScreen.lastElementChild);
+            }
+        }
+
+        function onScreen_Recieved(mobile){
+            mobile.changeScreen("recieved");
+            mobile.downBattery();
+            let recieved = mobile.getRecived();
+            for (let i of recieved){
+                let doc = document.createElement("p");
+                doc.textContent += "Recieved from " + i.getFrom() 
+                mobile.recievedScreen.insertBefore(doc, mobile.recievedScreen.lastElementChild);
+                doc = document.createElement("p");
+                doc.textContent +=  "Message: " + i.getMsg();
+                mobile.recievedScreen.insertBefore(doc, mobile.recievedScreen.lastElementChild);
+                doc = document.createElement("hr");
+                mobile.recievedScreen.insertBefore(doc, mobile.recievedScreen.lastElementChild);
+            }
+        }
+
+        nokia = new mobile("nokia");
+        iphone = new mobile("iphone");
+
+        let phones = []
+        phones.push(nokia);
+        phones.push(iphone);
+
+        for (let phone of phones){
+            phone.offScreen.firstElementChild.onclick = function(){
+                if(phone.getBattery() > 0) phone.changeScreen("on-screen");
+            }
+            phone.onScreen.firstElementChild.onclick = function(){
+                phone.downBattery();
+                phone.changeScreen("compose");
+            }
+            phone.onScreen.lastElementChild.onclick = function(){
+                phone.changeScreen("off-screen");
+            }
+            phone.onScreen.firstElementChild.nextElementSibling.nextElementSibling.onclick = function(){
+                onScreen_Sent(phone);
+            }
+            phone.onScreen.firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.onclick = function(){
+                onScreen_Recieved(phone);
+            }
+            phone.chargeBtn.onclick = function(){
+                phone.onBattery();
+            }
+            phone.composeScreen.lastElementChild.previousElementSibling.onclick = function(){
+                let target = phone.composeScreen.firstElementChild.nextElementSibling.nextElementSibling;
+                let textBody = target.nextElementSibling;
+
+                if (target.value != "" && textBody.value != ""){
+                    for (let subphone of phones){
+                        if (subphone.getId() == target.value){
+                            let msg = new message(phone.getId(), target.value, textBody.value);
+                            phone.sendMsg(msg);
+                            subphone.recieveMsg(msg);
+                            target.value = "";
+                            textBody.value = "";
+                            break;
+                        }
+                    }
+                }
+                phone.downBattery();
+            }
+        }
+    </script>    
+</body>
+</html>
