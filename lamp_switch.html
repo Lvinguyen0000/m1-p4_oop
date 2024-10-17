@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch and Lamp</title>
+</head>
+<body>
+    <textarea id="area" rows="5" cols="50" style="resize: none;"></textarea><br>
+    <button id="connect">Connect to the lamp</button><br>
+    <button id="switch">Switch the lamp</button>
+
+    <script>
+        class SwitchButton{
+            constructor(){
+                this.lamp = new Lamp;
+                this.status = flase;
+            }
+
+            connectToLamp(lamp){
+                this.lamp = lamp;
+                this.status = lamp.status
+            }
+            switchOff(){
+                this.status = false;
+                this.lamp.status = false;
+            }
+            switchOn(){
+                this.status = true;
+                this.lamp.status = true;
+            }
+        }
+
+        class Lamp{
+            constructor(){
+                this.status = false;
+            }
+
+            turnOff(){
+                this.status = false;
+            }
+            turnOn(){
+                this.status = true;
+            }
+        }
+
+        let area = document.getElementById("area");
+        let connect = document.getElementById("connect");
+        let switchBtn = document.getElementById("switch");
+
+        let theSwitch = new SwitchButton;
+        let theLamp = new Lamp;
+
+        connect.onclick = function(){
+            theSwitch.connectToLamp(theLamp);
+        }
+
+        switchBtn.onclick = function(){
+            if (theLamp.status) theSwitch.switchOff();
+            else theSwitch.switchOn();
+        }
+
+
+    </script>
+</body>
+</html>
