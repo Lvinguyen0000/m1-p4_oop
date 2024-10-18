@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caro game</title>
+    <style>
+        .cell{
+            width: 3rem; height: 3rem; border: 3px solid black; font-size: 2.5rem; text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="table"></div>
+    <p id="anoc"></p>
+
+    <script>
+        document.getElementById("table").appendChild(create_caro(20));
+
+        let turn = true;
+        let cells = document.getElementsByClassName("cell");
+        let anoc = document.getElementById("anoc");
+
+        for (let cell of cells){
+            cell.onclick = function(){
+                if (cell.textContent == ""){
+                    if (turn) {
+                        cell.textContent = "o";
+                        if(isWon()) {
+                            anoc.textContent = "o Won";
+                            alert("o Won");
+                        }
+                        turn = !turn;
+                    }
+                    else {
+                        cell.textContent = "x";
+                        if(isWon()) {
+                            anoc.textContent = "x Won"
+                            alert("x Won");
+                        }
+                        turn = !turn;
+                    }
+                }
+            }
+        }
+
+
+        function create_caro(size){
+            let table = document.createElement("table");
+            for(let i=0; i<size; i++){
+                let row = document.createElement("tr");
+                for(let j=0;j<size;j++){
+                    let cell = document.createElement("td");
+                    cell.classList.add("cell");
+                    cell.id = i.toString() + j.toString();
+                    cell.textContent = "";
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+            return table;
+        }
+
+        function check5x5(i, j){
+            for (let k = i; k < i + 5; k++){
+                let sum = 0;
+                for (let h = j; h < j + 5; h++){
+                    let cell = document.getElementById(k.toString()+h);
+                    if (cell.textContent == "o") sum++
+                    else if(cell.textContent == "x") sum--;
+                    if(sum == 5 || sum == -5) return true;
+                }
+            }
+            for(let k = j; k < j+5; k++){
+                let cell = document.getElementById(i.toString()+k).textContent;
+                let sum = 0;
+                if (cell != ""){
+                    if (cell == document.getElementById((i+1) + k.toString()).textContent) {
+                        sum++; 
+                    }
+                    if (cell == document.getElementById((i+2) + k.toString()).textContent) {
+                        sum++;
+                    }
+                    if (cell == document.getElementById((i+3) + k.toString()).textContent) {
+                        sum++;
+                    }
+                    if (cell == document.getElementById((i+4) + k.toString()).textContent) {
+                        sum++;
+                    }
+                    if(sum == 4) return true;
+                }
+            }
+
+            let center = document.getElementById((i+2).toString()+(j+2).toString()).textContent;
+
+            if (
+                (center != "") &&
+                (((center == document.getElementById(i.toString() + j).textContent) &&
+                (center == document.getElementById((i+1).toString() + (j+1)).textContent) &&
+                (center == document.getElementById((i+3).toString() + (j+3)).textContent) &&
+                (center == document.getElementById((i+4).toString() + (j+4)).textContent))
+                ||
+                ((center == document.getElementById((i+4).toString() + j).textContent) &&
+                (center == document.getElementById((i+3).toString() + (j+1)).textContent) &&
+                (center == document.getElementById((i+1).toString() + (j+3)).textContent) &&
+                (center == document.getElementById(i.toString() + (j+4)).textContent)))
+            ) return true;
+            return false;
+        }
+
+        function isWon(){
+            for(let i = 0; i < 15; i++){
+                for(let j=0; j< 15;j++){
+                    if(check5x5(i,j)) return true;
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
