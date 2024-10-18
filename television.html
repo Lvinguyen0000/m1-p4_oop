@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Television</title>
+</head>
+<body>
+    <script>
+        class Remote{
+            constructor(){
+                this.id = Math.floor(Math.random() * 10);
+                this.tv = null
+            }
+            connectTV(tv){
+                this.tv = tv;
+            }
+        }
+
+        class Television{
+            constructor(){
+                this.channel = 1;
+                this.volumn = 0;
+                this.isOn = false;
+            }
+            turnOnOff(){
+                this.isOn = !this.isOn;
+                if(this.isOn) console.log("TV turned on");
+                else console.log("TV is off");
+            }
+            changeVolumn(value){
+                if(this.isOn){
+                    this.volumn += value;
+                    if(this.volumn < 0 || this.volumn > 100) this.volumn -= value;
+                    console.log("Current volumn: " + this.volumn);
+                }
+            }
+            changeChannel(chan){
+                if(this.isOn){
+                    this.channel = chan;
+                    console.log("Current channel: " + this.channel);
+                }
+            }
+        }
+
+        let ret = new Remote;
+        let tv = new Television;
+        ret.connectTV(tv);
+        ret.tv.turnOnOff();
+        tv.changeChannel(7);
+        ret.tv.changeChannel(3);
+        ret.tv.changeVolumn(2);
+        ret.tv.turnOnOff();
+    </script>
+</body>
+</html>
