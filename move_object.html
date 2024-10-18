@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving object</title>
+    <style>
+        .master{
+            height: auto;
+        }
+        #wdow{
+            width: 100%;height: 400px;border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="master">
+        <canvas id="wdow"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("wdow");
+        const ctx = canvas.getContext("2d");
+        let speed = 1;
+
+        class OBject{
+            constructor(position, width, height, speed, widthBorder, heightBorder){
+                this.position = position;
+                this.width = width;
+                this.height = height;
+                this.speed = speed;
+                this.bW = widthBorder;
+                this.bH = heightBorder;
+
+                this.cur_pos = this.position;
+
+                this.keys = {
+                    'left': false,
+                    'right': false,
+                    'up': false,
+                    'down': false
+                }
+            }
+
+            updatePosition(){
+                this.cur_pos = this.position;
+            }
+
+            clearCurrent(){
+                ctx.clearRect(this.cur_pos.x, this.cur_pos.y, this.width, this.height);
+            }
+        }
+
+        function move(obj){
+                if(obj.keys.left || obj.keys.right || obj.keys.up || obj.keys.down){
+                    obj.updatePosition();
+                    obj.clearCurrent();
+                    if(obj.keys.left && obj.position.x > speed){
+                        obj.position.x -= obj.speed;
+                    }
+                    else if(obj.keys.right && (obj.position.x + obj.width) < (obj.bW - speed)){
+                        obj.position.x += obj.speed;
+                    }
+                    else if(obj.keys.up && obj.position.y > speed){
+                        obj.position.y -= obj.speed;
+                    }
+                    else if(obj.keys.down && (obj.position.y + obj.height) < (obj.bH - speed) ){
+                        obj.position.y += obj.speed;
+                    }
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(obj.position.x, obj.position.y, obj.width, obj.height);
+                }
+            }
+
+        function loadKeyDownEvents(obj){
+            window.addEventListener('keydown', (event) => {
+                event.preventDefault();
+                switch (event.key){
+                    case 'ArrowLeft':
+                        obj.keys.left = true;
+                        break;
+                    case 'ArrowRight':
+                        obj.keys.right = true;
+                        break;
+                    case 'ArrowUp':
+                        obj.keys.up = true;
+                        break;
+                    case 'ArrowDown':
+                        obj.keys.down = true;
+                        break;
+                }
+            });
+        }
+
+        function loadKeyUpEvents(obj){
+            window.addEventListener('keyup', (event) => {
+                event.preventDefault();
+                switch (event.key){
+                    case 'ArrowLeft':
+                        obj.keys.left = false;
+                        break;
+                    case 'ArrowRight':
+                        obj.keys.right = false;
+                        break;
+                    case 'ArrowUp':
+                        obj.keys.up = false;
+                        break;
+                    case 'ArrowDown':
+                        obj.keys.down = false;
+                        break;
+                }
+            });
+        }
+
+        let a = new OBject({x: canvas.width/2, y: canvas.height/2}, 20, 20, speed, canvas.width, canvas.height);
+        ctx.fillStyle = "red";
+        ctx.fillRect(a.position.x, a.position.y, a.width, a.height);
+        loadKeyDownEvents(a);
+        loadKeyUpEvents(a);
+        setInterval(move, 10, a);
+    </script>
+</body>
+</html>
