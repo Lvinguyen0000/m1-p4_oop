@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rat & Cat</title>
+</head>
+<body>
+    <script>
+        class Rat{
+            constructor(name, weight, speed){
+                this.name = name;
+                this.weight = weight;
+                this.speed = speed;
+                this.isAlive = true;
+            }
+
+            squeak(){
+                return "Chit chit";
+            }
+        }
+
+        class Cat{
+            constructor(name, weight, speed){
+                this.name = name;
+                this.weight = weight;
+                this.speed = speed;
+                this.isCatching = false;
+            }
+
+            meow(){
+                return "Meow Meow";
+            }
+
+            catch(rat){
+                if(!this.isCatching && this.speed > rat.speed){
+                    this.isCatching = true;
+                    this.eatRat(rat);
+                    return true;
+                }
+                return false;
+            }
+
+            eatRat(rat){
+                rat.isAlive = false;
+                this.weight += rat.weight;
+                this.speed -= rat.weight/2;
+                if(this.speed < 0) this.speed = 0;
+            }
+        }
+
+        let rat1 = new Rat("r1", 10, 50);
+        let rat2 = new Rat("r2", 20, 30);
+        let cat = new Cat("c1", 500, 40);
+
+        console.log("Rat " + rat1.name + " Rat " + rat2.name + " Cat " +cat.name);
+        console.log("Cat " + cat.name + " try to catch " + rat1.name);
+        if(cat.catch(rat1)) console.log("Rat " + rat1.name + " was caught");
+        else console.log("Rat " + rat1.name + " is faster than cat " + cat.name);
+
+        console.log("Cat " + cat.name + " try to catch " + rat2.name);
+        if(cat.catch(rat2)) console.log("Rat " + rat2.name + " was caught");
+        else console.log("Rat " + rat2.name + " is faster than cat " + cat.name);
+    </script>
+</body>
+</html>
