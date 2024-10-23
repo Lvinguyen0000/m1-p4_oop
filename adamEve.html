@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam and Eve</title>
+</head>
+<body>
+    <textarea cols="50" rows="30" id="display" style="resize: none;"></textarea>
+    <button id="btn">Next action</button>
+
+    <script>
+        let display = document.getElementById("display");
+        
+        class Apple{
+            constructor(){
+                this.weight = 10;
+            }
+            decrease(){
+                if (this.weight<=1) this.weight = 0;
+                else this.weight--;
+            }
+            isEmpty(){return !this.weight;}
+            getWeight(){return this.weight;}
+        }
+
+        class Human{
+            constructor(){
+                this.name = null;
+                this.gender = null;
+                this.weight = null;
+            }
+            isMale(){
+                return (this.gender=="male")?true:false;
+            }
+            setGender(gender){
+                this.gender = gender;
+            }
+            checkApple(apple){
+                return !apple.isEmpty();
+            }
+            eat(apple){
+                apple.decrease();
+                this.weight++;
+            }
+            say(str){
+                display.textContent += this.name + ": " + str + "\n";
+            }
+            getName(){return this.name};
+            setName(name){this.name = name};
+            getWeight(){return this.weight};
+            setWeight(weight){this.weight=weight};
+        }
+
+        function refresh(){
+            display.scrollTop = display.scrollHeight;
+        }
+
+        function action(human, apple){
+            display.textContent += human.getName() + " check the apple\n";
+            if (human.checkApple(apple)){
+                human.say("Apple still on the menu, i'll eat it");
+                human.eat(apple);
+                display.textContent += "The apple is now weight " + apple.getWeight() + "\n";
+                display.textContent += human.getName() + " is now weighting " + human.getWeight() + "\n\n";
+            }
+            else {
+                human.say("We ate the apple, now we're dead but i'm happy");
+                display.textContent += "\n";
+            }
+            refresh();
+        }
+
+        let app = new Apple;
+        let adam = new Human;
+        let eve = new Human;
+
+        adam.setName("Adam");
+        adam.setGender("male");
+        adam.setWeight(100);
+
+        eve.setName("Eve");
+        eve.setGender("female");
+        eve.setWeight(10);
+
+        document.getElementById("btn").onclick = function(){
+            (Math.random() < 0.5)? action(adam, app) : action(eve, app);
+        }
+    </script>
+</body>
+</html>
