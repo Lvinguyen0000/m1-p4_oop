@@ -36,12 +36,14 @@
 </head>
 <body>
     <div class="master" id="gWindow"></div>
+    <h2 id="score"></h2>
 
     <script>
         let object_x = 0;
         let object_y = 0;
         let obs_arr = [];
         let taken_pos = []
+        let score = 0;
 
 
         class Obstacle{
@@ -187,6 +189,8 @@
             car.carEle.style.left = car.position.x + "px";
 
             if (car.eaten()){
+                score++;
+                document.getElementById("score").textContent = "Score: " + score;
                 document.getElementById("gWindow").removeChild(document.getElementById("object"));
                 spawn_object();
                 spawn_obstacle();
